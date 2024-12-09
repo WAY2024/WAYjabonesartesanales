@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIENVENIDOS A WAY</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8d9e1; /* Fondo rosado suave */
+            color: #000; /* Texto en color negro */
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #f1a7c7; /* Fondo rosa más fuerte */
+            padding: 20px;
+            text-align: center;
+        }
+        header h1 {
+            font-size: 36px;
+            color: #333;
+        }
+        .search-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .search-container input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            font-size: 16px;
+        }
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+            padding: 0 20px;
+        }
+        .product {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+        .product:hover {
+            transform: scale(1.05);
+        }
+        .product img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .product h3 {
+            font-size: 18px;
+            color: #333;
+            margin: 10px 0;
+        }
+        .product p {
+            font-size: 14px;
+            color: #666;
+        }
+        footer {
+            background-color: #ffffff;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+            color: #777;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+        /* Modal Style */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 80%;
+            max-height: 80%;
+            overflow-y: auto;
+        }
+        .modal img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .modal h3 {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+        .modal p {
+            font-size: 16px;
+            color: #666;
+        }
+        .close-btn {
+            background-color: #f1a7c7;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>BIENVENIDOS A WAY</h1>
+    </header>
+
+    <div class="search-container">
+        <input type="text" id="searchBar" oninput="searchProduct()" placeholder="Buscar jabones...">
+    </div>
+
+    <div class="products" id="productsContainer">
+        <!-- Productos de cuerpo -->
+        <div class="product" data-name="Lavanda" onclick="viewProduct('Lavanda')">
+            <img src="https://virmanik.mx/cdn/shop/products/lavanda_1024x1024_2x_ca9dfdd2-5270-438c-aaf1-5159df1c05e7.jpg?v=1619235375" alt="Jabon Lavanda">
+            <h3>Lavanda</h3>
+            <p>Relaja y calma la piel.</p>
+        </div>
+        <div class="product" data-name="Rosas" onclick="viewProduct('Rosas')">
+            <img src="https://virmanik.mx/cdn/shop/products/rosas_1024x1024_2x_f7396a0b-cd5b-4511-adda-b54f030f0065.jpg?v=1619243191" alt="Jabon Rosas">
+            <h3>Rosas</h3>
+            <p>Hidrata y rejuvenece la piel.</p>
+        </div>
+        <div class="product" data-name="Menta" onclick="viewProduct('Menta')">
+            <img src="data:image/jpeg;base64,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" alt="Jabon Menta">
+            <h3>Menta</h3>
+            <p>Refresca y revitaliza la piel.</p>
+        </div>
+        <div class="product" data-name="Oceano" onclick="viewProduct('Oceano')">
+            <img src="https://www.manualidadesplus.com/wp-content/uploads/2021/05/jabones-artesanales-marinos-oceano.png" alt="Jabon Oceano">
+            <h3>Oceano</h3>
+            <p>Purifica y tonifica la piel.</p>
+        </div>
+        <div class="product" data-name="Jazmín" onclick="viewProduct('Jazmín')">
+            <img src="https://artesaniadeturquia.es/wp-content/uploads/2020/03/Diseno-sin-titulo-11.png">
+            <h3>Jazmín</h3>
+            <p>Suaviza y hidrata la piel.</p>
+        </div>
+        <div class="product" data-name="Limón" onclick="viewProduct('Limón')">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgzfzAirfmSd21niSqo_HdI7I2bHEnWKYNVTxhdLDg9-dKpil02oNlEmbVNpGpI5DWXBJ3aYZJ6Yv1csPK5fRvTEKLTViF6pVFZXXI_8Iwdh1ffeGbkZ5vj0G2P_le5WeoWRfEkCdsILuQ/s1600/Jabones+de+Limon.jpg" alt="Jabon Limón">
+            <h3>Limón</h3>
+            <p>Desintoxica y revitaliza la piel.</p>
+        </div>
+        <div class="product" data-name="Sakura" onclick="viewProduct('Sakura')">
+            <img src="data:image/jpeg;base64,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" alt="Jabon Sakura">
+            <h3>Sakura</h3>
+            <p>Nutre y suaviza la piel.</p>
+        </div>
+        <div class="product" data-name="Vainilla" onclick="viewProduct('Vainilla')">
+            <img src="data:image/jpeg;base64,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" alt="Jabon Vainilla">
+            <h3>Vainilla</h3>
+            <p>Hidrata y suaviza la piel.</p>
+        </div>
+
+        <!-- Productos de cara -->
+        <div class="product" data-name="Avena" onclick="viewProduct('Avena')">
+            <img src="https://yaabil.com/wp-content/uploads/2023/06/jabon-de-avena-1-1024x683.png" alt="Jabon Avena">
+            <h3>Avena</h3>
+            <p>Suaviza y limpia profundamente.</p>
+        </div>
+      
+      
+        <div class="product" data-name="Arroz" onclick="viewProduct('Arroz')">
+            <img src="https://media.glamour.mx/photos/64f6b1473d511aa8138b46e5/master/pass/jabon-de-arroz-para-blanquear-la-peil.jpg" alt="Jabon Arroz">
+            <h3>Arroz</h3>
+            <p>Exfolia y regenera la piel.</p>
+        </div>
+       
+   
+
+    <!-- Modal for showing detailed product -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="Jabon">
+            <h3 id="modalTitle"></h3>
+            <p id="modalDescription"></p>
+            <button class="close-btn" onclick="closeModal()">Cerrar</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 WAY - Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        // Function to search products
+        function searchProduct() {
+            let query = document.getElementById("searchBar").value.toLowerCase();
+            let products = document.querySelectorAll(".product");
+            products.forEach(function(product) {
+                let productName = product.getAttribute("data-name").toLowerCase();
+                if (productName.includes(query)) {
+                    product.style.display = "block";
+                } else {
+                    product.style.display = "none";
+                }
+            });
+        }
+
+        // Function to view product details in a modal
+        function viewProduct(name) {
+            let products = {
+                "Lavanda": {
+                    image: "https://virmanik.mx/cdn/shop/products/lavanda_1024x1024_2x_ca9dfdd2-5270-438c-aaf1-5159df1c05e7.jpg?v=1619235375",
+                    description: "Relaja y calma la piel con propiedades relajantes de la lavanda."
+                },
+                "Rosas": {
+                    image: "https://virmanik.mx/cdn/shop/products/rosas_1024x1024_2x_f7396a0b-cd5b-4511-adda-b54f030f0065.jpg?v=1619243191",
+                    description: "Hidrata y rejuvenece la piel gracias a las propiedades de las rosas."
+                },
+                "Menta": {
+                    image: "data:image/jpeg;base64,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",
+                    description: "Refresca y revitaliza la piel con el poder de la menta."
+                },
+                "Oceano": {
+                    image: "https://www.manualidadesplus.com/wp-content/uploads/2021/05/jabones-artesanales-marinos-oceano.png",
+                    description: "Purifica y tonifica la piel con esencias marinas."
+                },
+                "Jazmín": {
+                    image: "https://artesaniadeturquia.es/wp-content/uploads/2020/03/Diseno-sin-titulo-11.png",
+                    description: "Suaviza la piel con el toque floral del jazmín."
+                },
+                "Limón": {
+                    image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgzfzAirfmSd21niSqo_HdI7I2bHEnWKYNVTxhdLDg9-dKpil02oNlEmbVNpGpI5DWXBJ3aYZJ6Yv1csPK5fRvTEKLTViF6pVFZXXI_8Iwdh1ffeGbkZ5vj0G2P_le5WeoWRfEkCdsILuQ/s1600/Jabones+de+Limon.jpg",
+                    description: "Desintoxica y revitaliza la piel con un toque fresco de limón."
+                },
+                "Sakura": {
+                    image: "data:image/jpeg;base64,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",
+                    description: "Nutre y suaviza la piel."
+                },
+                "Vainilla": {
+                    image: "data:image/jpeg;base64,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",
+                    description: "Hidrata y suaviza la piel con un aroma delicado."
+                },
+                "Avena": {
+                    image: "https://yaabil.com/wp-content/uploads/2023/06/jabon-de-avena-1-1024x683.png",
+                    description: "Suaviza y limpia profundamente."
+                },
+                "Arroz": {
+                    image: "https://media.glamour.mx/photos/64f6b1473d511aa8138b46e5/master/pass/jabon-de-arroz-para-blanquear-la-peil.jpg",
+                    description: "Exfolia y regenera la piel."
+                },
+                
+            };
+
+            // Update modal content
+            document.getElementById("modalImage").src = products[name].image;
+            document.getElementById("modalTitle").textContent = name;
+            document.getElementById("modalDescription").textContent = products[name].description;
+
+            // Show modal
+            document.getElementById("productModal").style.display = "flex";
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            document.getElementById("productModal").style.display = "none";
+        }
+    </script>
+</body>
+</html>
